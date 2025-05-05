@@ -1,68 +1,66 @@
 import os
-os.system("clear")
+os.system("clear")  
 
-matricula = input("Digite a sua matrícula: ")
-senha = int(input("Digite sua senha: "))
-salario = float(input("Digite o seu sálario: "))
-acrescimo_refeicao = 0
-
-vale_refeicao = int(input("Digite o valor do vale refeição: "))
-def vale_refeicao_recebido():
-    acrescimo_refeicao = salario * 0.20
-    return vale_refeicao
-
-vale_transporte = input("Deseja receber vale transporte? Digite 'S' para sim 'N' para não:")
-match vale_transporte:
-        case "s":
-         acrescimo_transporte = salario * 0.06
-        case "n":
-               print()     
-dependentes = int(input("Informe a quantidade de dependentes: "))
-def calcular_plano_saude(dependentes):
-    return dependentes * 150.00
 def calcular_inss(salario):
-    match salario:
-        case _ if salario <= 1518.00:
-            return salario * 0.075
-        case _ if salario <= 2793.88:
-            return salario * 0.09 - 113.85
-        case _ if salario <= 4190.83:
-            return salario * 0.12 - 189.54
-        case _ if salario <= 8157.41:
-            return salario * 0.14 - 318.38
-        case _:
-            return 1142.04
-    	
+    if salario <= 1518.00:
+        return salario * 0.075
+    elif salario <= 2793.88:
+        return salario * 0.09 - 113.85
+    elif salario <= 4190.83:
+        return salario * 0.12 - 189.54
+    elif salario <= 8157.41:
+        return salario * 0.14 - 318.38
+    else:
+        return 1142.04
+
 def calcular_irrf(salario, dependentes):
     base_calculo = salario - (189.59 * dependentes)
-    match base_calculo:
-        case _ if base_calculo <= 2259.20:
-            return 0  
-        case _ if base_calculo <= 2826.65:
-            return base_calculo * 0.075 - 169.44
-        case _ if base_calculo <= 3751.05:
-            return base_calculo * 0.15 - 381.44
-        case _ if base_calculo <= 4664.68:
-            return base_calculo * 0.22 - 662.77
-        case _:
-            return base_calculo * 0.275 - 896.00
-	
-def calcular_salario_liquido(salario_base, dependentes, vale_transporte, vale_refeicao):
-    calcular_inss = calcular_inss(salario_base)
-    calcular_irrf = calcular_irrf(salario_base, dependentes)
-    vale_transporte = vale_transporte(salario_base, vale_transporte)
-    vale_refeicao_recebido = vale_refeicao_recebido(vale_refeicao)
-    desconto_plano_saude = calcular_plano_saude(dependentes)
+    if base_calculo <= 2259.20:
+        return 0  
+    elif base_calculo <= 2826.65:
+        return base_calculo * 0.075 - 169.44
+    elif base_calculo <= 3751.05:
+        return base_calculo * 0.15 - 381.44
+    elif base_calculo <= 4664.68:
+        return base_calculo * 0.225 - 662.77
+    else:
+        return base_calculo * 0.275 - 896.00
 
-    salario = salario_liquido - (calcular_inss + calcular_irrf + vale_transporte + vale_refeicao_recebido + desconto_plano_saude)
-    return salario_liquido
+def calcular_vt(salario, opta_vt):
+    return salario * 0.06 if opta_vt else 0
 
-salario_liquido = calcular_salario_liquido(salario, dependentes, vale_transporte, vale_refeicao)
+def calcular_vr(valor_vr):
+    return valor_vr * 0.20
 
-print(f"Matricula: {matricula}")
+def calcular_plano_saude(dependentes):
+    return dependentes * 150.00
+
+
+matricula = input("Digite a sua matrícula: ")
+senha = input("Digite sua senha: ")
+salario_base = float(input("Digite o seu salário base (R$): "))
+valor_vr = float(input("Digite o valor do vale refeição (R$): "))
+opcao_vt = input("Deseja receber vale transporte? Digite 'S' para sim ou 'N' para não: ").strip().lower()
+optou_vt = opcao_vt == 's'
+dependentes = int(input("Informe a quantidade de dependentes: "))
+
+
+desconto_inss = calcular_inss(salario_base)
+desconto_irrf = calcular_irrf(salario_base, dependentes)
+desconto_vt = calcular_vt(salario_base, optou_vt)
+desconto_vr = calcular_vr(valor_vr)
+desconto_saude = calcular_plano_saude(dependentes)
+
+total_descontos = desconto_inss + desconto_irrf + desconto_vt + desconto_vr + desconto_saude
+salario_liquido = salario_base - total_descontos
+
+print("\n--- RESUMO ---")
+print(f"Matrícula: {matricula}")
 print(f"Senha: {senha}")
-print(f"Sálario Líquido: {salario}")
-print(f"Vale Refeição: {vale_refeicao}")
-print(f"Dependentes: {dependentes}")
-print(f"Vale Transporte: {vale_transporte}")
-print(f"Sálario Total: {salario_liquido}")
+print(f"Salário Base: R$ {salario_base:.2f}")
+print(f"INSS: R$ {desconto_inss:.2f}")
+print(f"IRRF: R$ {desconto_irrf:.2f}")
+print(f"Vale Transporte: R$ {desconto_vt:.2f}")
+print(f"Vale Refeição (20%): R$ {desconto_vr:.2f}")
+print(f"Plano de Saúde: R$ {desconto_saude:.2f}")
+print(f"Salário Líquido: R$ {salario_liquido:.2f}")
