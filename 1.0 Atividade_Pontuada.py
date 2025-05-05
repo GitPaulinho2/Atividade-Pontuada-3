@@ -1,5 +1,5 @@
 import os
-os.system("clear")  
+os.system("clear") 
 
 def calcular_inss(salario):
     if salario <= 1518.00:
@@ -29,9 +29,6 @@ def calcular_irrf(salario, dependentes):
 def calcular_vt(salario, opta_vt):
     return salario * 0.06 if opta_vt else 0
 
-def calcular_vr(valor_vr):
-    return valor_vr * 0.20
-
 def calcular_plano_saude(dependentes):
     return dependentes * 150.00
 
@@ -39,28 +36,32 @@ def calcular_plano_saude(dependentes):
 matricula = input("Digite a sua matrícula: ")
 senha = input("Digite sua senha: ")
 salario_base = float(input("Digite o seu salário base (R$): "))
-valor_vr = float(input("Digite o valor do vale refeição (R$): "))
-opcao_vt = input("Deseja receber vale transporte? Digite 'S' para sim ou 'N' para não: ").strip().lower()
+opcao_vt = input("Deseja receber vale transporte? Digite 'S' para sim ou 'N' para não: ")
 optou_vt = opcao_vt == 's'
+valor_vr_total = float(input("Digite o valor do vale refeição oferecido (R$): "))
 dependentes = int(input("Informe a quantidade de dependentes: "))
 
 
 desconto_inss = calcular_inss(salario_base)
 desconto_irrf = calcular_irrf(salario_base, dependentes)
 desconto_vt = calcular_vt(salario_base, optou_vt)
-desconto_vr = calcular_vr(valor_vr)
 desconto_saude = calcular_plano_saude(dependentes)
 
-total_descontos = desconto_inss + desconto_irrf + desconto_vt + desconto_vr + desconto_saude
-salario_liquido = salario_base - total_descontos
 
-print("\n--- RESUMO ---")
+salario_parcial = salario_base - (desconto_inss + desconto_irrf + desconto_vt + desconto_saude)
+
+
+desconto_vr = salario_parcial * 0.20
+
+
+salario_liquido = salario_parcial - desconto_vr
+
+
+print("\n--- Resultado ---")
 print(f"Matrícula: {matricula}")
 print(f"Senha: {senha}")
 print(f"Salário Base: R$ {salario_base:.2f}")
-print(f"INSS: R$ {desconto_inss:.2f}")
-print(f"IRRF: R$ {desconto_irrf:.2f}")
 print(f"Vale Transporte: R$ {desconto_vt:.2f}")
-print(f"Vale Refeição (20%): R$ {desconto_vr:.2f}")
 print(f"Plano de Saúde: R$ {desconto_saude:.2f}")
-print(f"Salário Líquido: R$ {salario_liquido:.2f}")
+print(f"Vale Refeição: R$ {desconto_vr:.2f}")
+print(f"Salário Líquido Final: R$ {salario_liquido:.2f}")
