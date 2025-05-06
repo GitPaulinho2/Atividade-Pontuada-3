@@ -32,7 +32,6 @@ def calcular_vt(salario, opta_vt):
 def calcular_plano_saude(dependentes):
     return dependentes * 150.00
 
-
 matricula = input("Digite a sua matrícula: ")
 senha = input("Digite sua senha: ")
 salario_base = float(input("Digite o seu salário base (R$): "))
@@ -40,7 +39,6 @@ opcao_vt = input("Deseja receber vale transporte? Digite 'S' para sim ou 'N' par
 optou_vt = opcao_vt == 's'
 valor_vr_total = float(input("Digite o valor do vale refeição oferecido (R$): "))
 dependentes = int(input("Informe a quantidade de dependentes: "))
-
 
 desconto_inss = calcular_inss(salario_base)
 desconto_irrf = calcular_irrf(salario_base, dependentes)
@@ -50,12 +48,9 @@ desconto_saude = calcular_plano_saude(dependentes)
 
 salario_parcial = salario_base - (desconto_inss + desconto_irrf + desconto_vt + desconto_saude)
 
-
 desconto_vr = salario_parcial * 0.20
 
-
 salario_liquido = salario_parcial - desconto_vr
-
 
 print("\n--- Resultado ---")
 print(f"Matrícula: {matricula}")
